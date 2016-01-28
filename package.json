@@ -1,0 +1,25 @@
+{
+  "name": "just-forms",
+  "version": "1.0.0",
+  "description": "An accompanientment to the lightning-talk on how simple forms can be used over model-bining",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/togakangaroo/just-forms.git"
+  },
+  "keywords": [
+    "presentation",
+    "demo",
+    "forms",
+    "html5"
+  ],
+  "author": "gmauer@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.4"
+  }
+}
