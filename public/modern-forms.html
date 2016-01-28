@@ -1,0 +1,50 @@
+<title>What about simple forms?</title>
+<link rel="stylesheet" href="/style.css" media="screen" charset="utf-8">
+<link rel="stylesheet" href="/modern-forms-style.css" media="screen" charset="utf-8">
+<header>
+	<p>
+		A simple demo of how you can use simple forms in a modern way
+	</p>
+</header>
+<main>
+	<p>
+		Let's register for something!
+	</p>
+	<form action="/register" method="post">
+		<label>
+			<input name="name" required pattern="((?![Ff]red).)*$" minlength=2 title="No freds allowed!">
+			<span class="label">Name</span>
+		</label>
+		<label>
+			<input name="email" required type="email" title="An email address is required">
+			<span class="label">Email</span>
+		</label>
+		<label>
+			<input name="age" type="number" min=18 title="Adults only please">
+			<span class="label">Your age</span>
+		</label>
+		<button type="submit">Submit</button>
+	</form>
+</main>
+
+<footer>
+	<p>
+		<a href="/modern-forms.html">Now with modern forms</a>
+	</p>
+</footer>
+
+<script>
+'use strict'
+!function() {
+	Array.from(document.querySelectorAll('form')).map(form => {
+		form.addEventListener('submit', submitViaAjax)
+	})
+
+	function submitViaAjax(e) {
+			e.preventDefault();
+			const xhr = new XMLHttpRequest();
+			xhr.open(e.target.method, e.target.action);
+			xhr.send(new FormData(e.target));
+	}
+}()
+</script>

@@ -1,0 +1,7 @@
+label > * { order: 1; }
+label > .label { order: 0; }
+
+[required]+.label:after {
+  content: ": *";
+}
+input:invalid+.label { color: red; }
