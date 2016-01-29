@@ -29,7 +29,7 @@
 
 <footer>
 	<p>
-		<a href="/fancier-forms.html">Fancier forms</a>
+		And we're done
 	</p>
 </footer>
 
@@ -45,6 +45,21 @@
 			const xhr = new XMLHttpRequest();
 			xhr.open(e.target.method, e.target.action);
 			xhr.send(new FormData(e.target));
+			e.target.classList.add('sending');
+
+			const result = () =>
+				(  /^application\/json;/.test( xhr.getResponseHeader('Content-Type') ) && xhr.response ) ? JSON.parse(xhr.response) : xhr.response
+
+			const sending = new Promise((resolve, reject) => {
+				const call = fn => fn({result: result(), xhr})
+				xhr.addEventListener('load', () =>
+					call(xhr.status < 200 || xhr.status >= 300 ? reject : resolve)
+				)
+				xhr.addEventListener('error', () => call(reject))
+				xhr.addEventListener('abort', () => call(result))
+			})
+			const finish = () => e.target.classList.remove('sending');
+			sending.then(finish, finish)
 	}
 }()
 </script>

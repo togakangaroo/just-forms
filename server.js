@@ -1,15 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const upload = require('multer')({})
+
 const app = express();
 
 app.use('/', express.static('./public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/register', (req, res) => {
+app.post('/register', upload.array(), (req, res) => {
   console.log(`${Date()}: recieved:
     ${JSON.stringify(req.body, null, '\t')}
   `)
-  res.status(200).set('Content-Type', 'text/plain').send("request recieved").end();
+  setTimeout(
+    () => res.status(200).set('Content-Type', 'text/plain').send("request recieved").end(),
+    1000
+  );
 });
 
 const server = app.listen(8080, 'localhost', () => {
