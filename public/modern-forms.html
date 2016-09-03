@@ -43,7 +43,7 @@
 	function submitViaAjax(e) {
 			e.preventDefault();
 			const xhr = new XMLHttpRequest();
-			xhr.open(e.target.method, e.target.action);
+			xhr.open(e.target.attributes.method.value, e.target.action);
 			xhr.send(new FormData(e.target));
 	}
 }()

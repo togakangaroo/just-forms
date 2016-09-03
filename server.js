@@ -7,15 +7,17 @@ const app = express();
 app.use('/', express.static('./public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/register', upload.array(), (req, res) => {
-  console.log(`${Date()}: recieved:
-    ${JSON.stringify(req.body, null, '\t')}
-  `)
-  setTimeout(
-    () => res.status(200).set('Content-Type', 'text/plain').send("request recieved").end(),
-    1000
-  );
-});
+['get', 'post', 'put', 'delete'].forEach(method =>
+    app[method]('/register', upload.array(), (req, res) => {
+        console.log(`${req.method} ${Date()}: recieved:
+            ${JSON.stringify(req.body, null, '\t')}
+        `)
+        setTimeout(
+            () => res.status(200).set('Content-Type', 'text/plain').send("request recieved").end(),
+            1000
+        );
+    })
+);
 
 const server = app.listen(8080, 'localhost', () => {
   const host = server.address().address;

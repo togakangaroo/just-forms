@@ -10,7 +10,7 @@
 	<p>
 		Let's register for something!
 	</p>
-	<form action="/register" method="post">
+	<form action="/register" method="POST">
 		<label>
 			<input name="name" required pattern="((?![Ff]red).)*$" minlength=2 title="No freds allowed!">
 			<span class="label">Name</span>
@@ -43,7 +43,7 @@
 	function submitViaAjax(e) {
 			e.preventDefault();
 			const xhr = new XMLHttpRequest();
-			xhr.open(e.target.method, e.target.action);
+			xhr.open(e.target.attributes.method.value, e.target.action);
 			xhr.send(new FormData(e.target));
 			e.target.classList.add('sending');
 
