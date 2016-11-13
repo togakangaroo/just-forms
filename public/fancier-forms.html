@@ -31,9 +31,12 @@
 	<p>
 		And we're done
 	</p>
+	<pre class="code-display">
+		<code class="javascript"></code>
+	</pre>
 </footer>
 
-<script>
+<script class="code-source">
 'use strict'
 !function() {
 	Array.from(document.querySelectorAll('form')).map(form => {
@@ -48,7 +51,8 @@
 			e.target.classList.add('sending');
 
 			const result = () =>
-				(  /^application\/json;/.test( xhr.getResponseHeader('Content-Type') ) && xhr.response ) ? JSON.parse(xhr.response) : xhr.response
+					(  /^application\/json;/.test( xhr.getResponseHeader('Content-Type') )) ?
+										JSON.parse(xhr.response||"null") : xhr.response
 
 			const sending = new Promise((resolve, reject) => {
 				const call = fn => fn({result: result(), xhr})
@@ -63,3 +67,19 @@
 	}
 }()
 </script>
+
+<style>
+ .code-display {
+		 position: fixed;
+		 bottom: 3vw;
+		 right: 3vw;
+		 max-width: 96vw;
+		 box-sizing: border-box;
+		 overflow: scroll;
+ }
+</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+<script defer>
+	document.querySelector('.code-display code').innerHTML = document.querySelector('.code-source').innerHTML;
+</script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css" rel="stylesheet"/>
