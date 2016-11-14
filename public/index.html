@@ -1,22 +1,37 @@
 <title>Forms</title>
-<link rel="stylesheet" href="/style.css" media="screen" charset="utf-8">
+<link rel="stylesheet" href="/frame-style.css" media="screen" charset="utf-8">
 <nav>
 	<a href="/default-forms.html" target="form-display">Default Form</a>
 	<a href="/fancier-forms.html" target="form-display">Use Ajaxified form</a>
 	<a href="/modern-forms.html" target="form-display">Use Ajaxified form with validation</a>
 </nav>
-<header>
-	Url: <span id="current-url"></span>
-</header>
-<iframe name="form-display" src="_blank">
-	Select a link on hte left
-</iframe>
+<main>
+	<header>
+		Url: <span id="current-url"></span>
+	</header>
+	<article>
+		<iframe name="form-display" src="">
+			Select a link
+		</iframe>
+		<pre id="code-display">
+			<code class="javascript"></code>
+		</pre>
+	</article>
+</main>
 <script>
  (() => {
-	const sel1 = (selector) => document.querySelector(selector)
+	const sel1 = (selector, doc=document) => doc.querySelector(selector)
 	sel1('[name="form-display"]').addEventListener('load', (e) => {
 		const innerDoc = e.target.contentWindow.document
 		sel1('#current-url').textContent = innerDoc && innerDoc.location
+		const code = sel1('#code-display code')
+		code.innerHTML = sel1('.code-source', innerDoc).innerHTML
+		hljs.highlightBlock(code)
 	})
 })()
+</script>
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/highlight.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.6.0/styles/default.min.css" rel="stylesheet"/>
+<script defer>
 </script>

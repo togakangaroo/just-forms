@@ -1,0 +1,48 @@
+body {
+	display: flex;
+	font-size: 1.2rem;
+	height: 100vh;
+	padding: .5em;
+	box-sizing: border-box;
+	margin: 0;
+}
+
+nav {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 9em;
+	flex-grow: 0;
+	box-sizing: border-box;
+	padding: .5em;
+	margin-right: .5em;
+}
+nav a {
+	display: flex;
+	padding: .5em;
+	text-decoration: none;
+	text-transform: capitalize;
+	border: 1px solid #666;
+	background-color: #ddd;
+	color: #000;
+}
+nav a + a {
+	margin: .25em 0;
+}
+[name="form-display"] {
+	max-width: 50%;
+	width: 50%;
+}
+#code-display {
+	max-width: 50%;
+	overflow: scroll;
+	margin-left: 1em;
+}
+main {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+article {
+	display: flex;
+	flex-grow: 1;
+}
