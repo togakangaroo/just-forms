@@ -29,11 +29,11 @@ nav a + a {
 	margin: .25em 0;
 }
 [name="form-display"] {
-	max-width: 50%;
-	width: 50%;
+	max-width: 35%;
+	width: 35%;
 }
 #code-display {
-	max-width: 50%;
+	max-width: 65%;
 	overflow: scroll;
 	margin-left: 1em;
 }

@@ -1,0 +1,87 @@
+<title>What about simple forms?</title>
+<link rel="stylesheet" href="/style.css" media="screen" charset="utf-8">
+<header>
+	An example of an ajaxified react form
+</header>
+<main></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.2/react-dom.min.js"></script>
+<script class="code-source">
+(() => {
+	const { createFactory: create, createClass } = React
+	const { form, label, span, input, button } = React.DOM
+
+	const arr = v => v[Symbol.iterator] ? Array.from(v) : [v]
+	const parseResult = ({xhr}) =>
+			(  /^application\/json;/.test( xhr.getResponseHeader('Content-Type') )) ?
+								JSON.parse(xhr.response||"null") : xhr.response
+
+	// Ajaxified form that works just like a regular form.
+	const ajaxForm = create(createClass({
+		render() {
+			const {action, method, children, className=''} = this.props
+			const sendingClass = this.state.sending ? 'sending' : ''
+			return (
+				form({ action, method,
+						onSubmit: this.redirectSubmission,
+						className: `${className} ${sendingClass}`
+					},
+					...arr(children)
+				)
+			)
+		},
+		getInitialState: () => ({sending: false}),
+		redirectSubmission(e) {
+			e.preventDefault()
+			this.setState({sending: true})
+			const xhr = new XMLHttpRequest()
+			xhr.open(e.target.attributes.method.value, e.target.action)
+			xhr.send(new FormData(e.target))
+
+			const sending = new Promise((resolve, reject) => {
+				const call = fn => fn({parseResult: parseResult({xhr}), xhr})
+				xhr.addEventListener('load', () =>
+					call(xhr.status < 200 || xhr.status >= 300 ? reject : resolve)
+				)
+				xhr.addEventListener('error', () => call(reject))
+				xhr.addEventListener('abort', () => call(parseResult))
+			})
+			const finish = () => this.setState({sending: false})
+			sending.then(finish, finish)
+			this.props.onSubmit && this.props.onSubmit(sending)
+		},
+	}))
+
+	const labeledElement = create(
+		({text, children, className}) =>
+			label({className},
+				...arr(children),
+				span({className: 'label'}, text)
+			)
+	)
+
+	const registrationForm = create(() =>
+		ajaxForm({action: '/register', method: 'POST',
+				onSubmit: (sending) => sending.then(() => alert(`It submitted!`)),
+			},
+			labeledElement({text: `Name`},
+				input({ name: 'name', title: "No freds allowed!",
+					required: true, minLength: 2, pattern: `((?![Ff]red).)*$`,
+				})
+			),
+			labeledElement({text: `Email`},
+				input({ name: 'email', title: "An email address is required", type: 'email',
+					required: true})
+			),
+			labeledElement({text: `Age`},
+				input({ name: 'age', title: "Adults only please", type: 'number',
+					min: 18,
+				})
+			),
+			button({}, `Submit`)
+		)
+	)
+
+	ReactDOM.render( registrationForm(), document.querySelector('main'))
+})()
+</script>
