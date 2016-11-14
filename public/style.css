@@ -33,3 +33,32 @@ form input, form button {
 label > .label:after {
 	content: ":";
 }
+
+label > * { order: 1; }
+label > .label { order: 0; }
+
+[required]+.label:after {
+		content: ": *";
+}
+input:invalid+.label { color: red; }
+
+form:before {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: rgba(0,0,0,.2);
+		z-index: 100;
+		background-image: url('/ajax-loader.gif');
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: 70%;
+		transition: display 0s linear 0.5s;
+
+		display: none;
+}
+form.sending:before {
+    display: flex;
+}

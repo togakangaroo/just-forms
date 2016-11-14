@@ -1,6 +1,5 @@
 <title>What about simple forms?</title>
 <link rel="stylesheet" href="/style.css" media="screen" charset="utf-8">
-<link rel="stylesheet" href="/modern-forms-style.css" media="screen" charset="utf-8">
 <header>
 	<p>
 		A simple demo of how you can use simple forms in a modern way
@@ -28,17 +27,10 @@
 </main>
 
 <footer>
-	<p>
-		And we're done
-	</p>
-	<pre class="code-display">
-		<code class="javascript"></code>
-	</pre>
 </footer>
 
 <script class="code-source">
-'use strict'
-!function() {
+(() => {
 	Array.from(document.querySelectorAll('form')).map(form => {
 		form.addEventListener('submit', submitViaAjax)
 	})
@@ -65,5 +57,5 @@
 			const finish = () => e.target.classList.remove('sending');
 			sending.then(finish, finish)
 	}
-}()
+})()
 </script>

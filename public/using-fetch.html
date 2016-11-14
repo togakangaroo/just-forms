@@ -1,13 +1,13 @@
-<title>What about simple forms?</title>
+<title>Using fetch</title>
 <link rel="stylesheet" href="/style.css" media="screen" charset="utf-8">
 <header>
 	<p>
-		A simple demo of how you can use simple forms in a modern way
+		Show forms submitted via fetch
 	</p>
 </header>
 <main>
 	<p>
-		Let's register for something!
+		Submitting via fetch
 	</p>
 	<form action="/register" method="post">
 		<label>
@@ -36,13 +36,18 @@
 (() => {
 	Array.from(document.querySelectorAll('form')).map(form => {
 		form.addEventListener('submit', submitViaAjax)
+		form.addEventListener('ajaxSubmitSuccess', () => alert("Submission complete"))
 	})
 
 	function submitViaAjax(e) {
-			e.preventDefault();
-			const xhr = new XMLHttpRequest();
-			xhr.open(e.target.attributes.method.value, e.target.action);
-			xhr.send(new FormData(e.target));
+		e.preventDefault()
+		const form = e.target
+		fetch(form.action, {
+			method: form.attributes.method.value,
+			body: new FormData(form)
+		}).then(() => {
+			e.target.dispatchEvent(new CustomEvent('ajaxSubmitSuccess', {target: form}))
+		});
 	}
 })()
 </script>
