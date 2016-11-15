@@ -1,0 +1,79 @@
+<title>Using an ajaxified angularjs form</title>
+<link rel="stylesheet" href="/style.css" media="screen" charset="utf-8">
+<header>
+	An example of an ajaxified angular form
+</header>
+<main ng-app="ajaxFormDemoApp" ng-controller="ajaxFormDemo as $ctrl">
+	<ajax-form  on-sending="$ctrl.alertOnDone(sending)" action="/register" method="POST">
+		<label>
+			<input name="name" required pattern="((?![Ff]red).)*$" minlength=2 title="No freds allowed!" value="mname">
+			<span class="label">Name</span>
+		</label>
+		<label>
+			<input name="email" required type="email" title="An email address is required" value="a@b.com">
+			<span class="label">Email</span>
+		</label>
+		<label>
+			<input name="age" type="number" min=18 title="Adults only please">
+			<span class="label">Your age</span>
+		</label>
+		<button type="submit">Submit</button>
+</ajax-form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+
+<script class="code-source">
+	const submitViaAjax = ($scope) => (e) => {
+		e.preventDefault();
+		const xhr = new XMLHttpRequest();
+		xhr.open(e.target.attributes.method.value, e.target.action);
+		xhr.send(new FormData(e.target));
+
+		const result = () =>
+			(  /^application\/json;/.test( xhr.getResponseHeader('Content-Type') )) ?
+		JSON.parse(xhr.response||"null") : xhr.response
+
+		const sending = new Promise((resolve, reject) => {
+			const call = fn => fn({result: result(), xhr})
+			xhr.addEventListener('load', () =>
+				call(xhr.status < 200 || xhr.status >= 300 ? reject : resolve)
+			)
+			xhr.addEventListener('error', () => call(reject))
+			xhr.addEventListener('abort', () => call(result))
+		})
+		const finish = () => $scope.$apply(() => $scope.isCurrentlySending = false)
+		sending.then(finish, finish)
+		$scope.$apply(() => {
+			$scope.isCurrentlySending = true
+			$scope.onSending && $scope.onSending({sending})
+		})
+	}
+	angular.module('ajaxFormDemoApp', [])
+		.controller('ajaxFormDemo', [function() {
+			this.alertOnDone = (sending) => 
+				sending.then(() => alert(`Sent successfully`))
+		}])
+		.directive('ajaxForm', [
+			() => {
+				const link = ($scope, $el) => {
+					console.log('linking')
+					$el.find('form').on('submit', submitViaAjax($scope))
+				}
+				return {
+					restrict: 'E',
+					link,
+					transclude: true,
+					scope: {
+						onSending: '&',
+						action: '@',
+						method: '@',
+					},
+					template: `
+						<form class="ajax-form" ng-class="{'sending': isCurrentlySending}" action="{{action}}" method="{{method}}">
+							<ng-transclude></ng-transclude>
+						</form>
+					`
+				}
+			}
+		])
+</script>
