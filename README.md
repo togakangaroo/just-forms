@@ -10,4 +10,7 @@ You can then launch the sample application with
 
      npm start
      
-And view it by pointing your web browser to [http://localhost:8080](http://localhost:8080)
+And view it by pointing your web browser to [http://127.0.0.1:8080/](http://127.0.0.1:8080/)
+
+Find a full [article on this technique at Code Magazine](http://www.codemag.com/Article/1701091).
+Find [slides from a presentation here](https://docs.google.com/presentation/d/1wswqElnMyaou4vgWqVXBf-yfQBPHU2Ob9x6delYgSpE/edit?usp=sharing)
